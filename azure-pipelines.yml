@@ -1,0 +1,105 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'yongtaufoo-docker'
+  imageRepository: 'sample'
+  containerRegistry: 'yongtaufoo.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/src/Sample.API/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+  buildConfiguration: 'Release'
+  azureSubscription: 'Azure for Students(b795a580-27df-43f6-961a-ef0ce9ac227a)'
+  appName: 'yong-tau-foo-sample'
+
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        buildContext: '$(Build.Repository.LocalPath)'
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+
+- stage: Test
+  displayName: Testing stage
+  jobs:
+  - job: Test
+    displayName: Test
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: 'Install .NET tools from local manifest'
+      inputs:
+        command: custom
+        custom: tool
+        arguments: 'restore'
+    - task: DotNetCoreCLI@2
+      displayName: Test
+      inputs: 
+        command: 'test'
+        projects: '**/*Tests.csproj'
+        arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
+        publishTestResults: true
+    - task: DotNetCoreCLI@2
+      displayName: 'Create code coverage report'
+      inputs:
+        command: custom
+        custom: tool
+        arguments: 'run reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines'
+
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish code coverage report'
+      inputs:
+        codeCoverageTool: 'cobertura'
+        summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
+
+# - stage: Deploy
+#   displayName: Deploy to azure 
+#   jobs:
+#     - deployment: Deploy
+#       displayName: Deploy
+#       environment:
+#        name: 'sample-default'
+#       strategy:
+#        runOnce:
+#          deploy:
+#            steps:
+#             - task: AzureWebAppContainer@1
+#               inputs:
+#                 azureSubscription: $(azureSubscription)
+#                 appName: $(appName)
+#                 containers: $(containerRegistry)/$(imageRepository):$(tag)
+
+    # - job: Deploy
+    #   displayName: Deploy
+    #   steps:
+    #   - task: AzureWebAppContainer@1
+    #     inputs:
+    #       azureSubscription: $(azureSubscription)
+    #       appName: $(appName)
+    #       containers: $(containerRegistry)/$(imageRepository):$(tag)
+
+
