@@ -1,0 +1,6 @@
+@SC4013.Web_HostAddress = http://localhost:5189
+
+GET {{SC4013.Web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
