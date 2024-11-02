@@ -30,3 +30,7 @@ dotnet ef migrations add Initial --startup-project ./src/SC4013.Web --project ./
 ```
 
 
+## Issues
+
+### On macOS, "There was an error exporting the HTTPS developer certificate to a file."  
+[Solution](https://developercommunity.visualstudio.com/t/VS2022-Angular-ASPNET-Core-Template-out/10767300?sort=active&type=idea)

@@ -18,6 +18,11 @@ builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(config);
 builder.Services.AddWebServices();
 
+// builder.Services.AddSpaStaticFiles(cfg =>
+// {
+//     cfg.RootPath = "ClientApp/dist";
+// });
+
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -40,6 +45,7 @@ else
 
 //app.UseHealthChecks("/health");
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();

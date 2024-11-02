@@ -35,3 +35,7 @@ bld/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Node.js Tools for Visual Studio
+.ntvs_analysis.dat
+node_modules/
