@@ -2,15 +2,22 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Sample.API.Common;
 using SC4013.Application;
 using SC4013.Infrastructure;
 using SC4013.Infrastructure.Data;
 using SC4013.Web;
+using SC4013.Web.Common;
 using SC4013.Web.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+//using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
+// var connectionString = builder.Configuration.GetConnectionString("IdentityContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityContextConnection' not found.");
+//
+// builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlServer(connectionString));
+//
+// builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<IdentityContext>();
 
 var config = builder.Configuration;
 
@@ -26,8 +33,8 @@ builder.Services.AddWebServices();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+//builder.Services.AddSwaggerGen();
+//builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
 var app = builder.Build();
 
@@ -35,44 +42,35 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     await app.InitializeDatabaseAsync();
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 else
 {
     app.UseHsts();
 }
 
-//app.UseHealthChecks("/health");
+app.UseHealthChecks("/health");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseSwaggerUi(settings =>
+{
+    settings.Path = "/api";
+    settings.DocumentPath = "/api/specification.json";
+});
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller}/{action=Index}/{id?}");
+
+app.MapRazorPages();
+
+app.MapFallbackToFile("index.html");
+
+app.UseExceptionHandler(options => { });
+// app.UseAuthentication();
+// app.UseAuthorization();
 
 app.MapEndpoints();
-//app.MapControllers();
-
-// var summaries = new[]
-// {
-//     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-// };
-
-// app.MapGet("/weatherforecast", () =>
-//     {
-//         var forecast = Enumerable.Range(1, 5).Select(index =>
-//                 new WeatherForecast
-//                 (
-//                     DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-//                     Random.Shared.Next(-20, 55),
-//                     summaries[Random.Shared.Next(summaries.Length)]
-//                 ))
-//             .ToArray();
-//         return forecast;
-//     })
-//     .RequireAuthorization()
-//     .WithName("GetWeatherForecast")
-//     .WithOpenApi();
 
 app.Run();
 

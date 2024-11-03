@@ -54,15 +54,16 @@ public class IdentityDbContextInitializer
         }
         
         // Seed users
+        var defaultPassword = "Password1234567890!";
         var adminUser = new ApplicationUser
         {
-            UserName = "admin",
+            UserName = "admin@localhost",
             Email = "admin@localhost"
         };
         
         if (_userManager.Users.All(u => u.UserName != adminUser.UserName))
         {
-            await _userManager.CreateAsync(adminUser, "Abc123!");
+            await _userManager.CreateAsync(adminUser, defaultPassword);
             if (!string.IsNullOrWhiteSpace(adminRole.Name))
             {
                 await _userManager.AddToRolesAsync(adminUser, new [] { adminRole.Name });
@@ -71,13 +72,13 @@ public class IdentityDbContextInitializer
         
         var leaderUser = new ApplicationUser
         {
-            UserName = "leader",
+            UserName = "leader@localhost",
             Email = "leader@localhost"
         };
         
         if (_userManager.Users.All(u => u.UserName != leaderUser.UserName))
         {
-            await _userManager.CreateAsync(leaderUser, "Abc123!");
+            await _userManager.CreateAsync(leaderUser, defaultPassword);
             if (!string.IsNullOrWhiteSpace(leaderRole.Name))
             {
                 await _userManager.AddToRolesAsync(leaderUser, new [] { leaderRole.Name });

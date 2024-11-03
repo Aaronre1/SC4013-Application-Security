@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular_app": {
+    "SC4013.Web": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "angular_app:build:production"
+              "browserTarget": "SC4013.Web:build:production"
             },
             "development": {
-              "browserTarget": "angular_app:build:development",
+              "browserTarget": "SC4013.Web:build:development",
               "proxyConfig": "proxy.conf.js"
             }
           },
@@ -84,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular_app:build"
+            "browserTarget": "SC4013.Web:build"
           }
         },
         "test": {
@@ -132,7 +132,7 @@
       }
     }
   },
-  "defaultProject": "angular_app",
+  "defaultProject": "SC4013.Web",
   "cli": {
     "analytics": false
   }

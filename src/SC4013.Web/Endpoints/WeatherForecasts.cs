@@ -1,4 +1,3 @@
-using Sample.API.Common;
 using SC4013.Infrastructure.Identity;
 using SC4013.Web.Common;
 
@@ -10,7 +9,6 @@ public class WeatherForecasts : EndpointGroupBase
     {
         app.MapGroup(this)
             .RequireAuthorization()
-            .WithName("GetWeatherForecasts")
             .WithOpenApi()
             .MapGet(GetWeatherForecasts);
     }

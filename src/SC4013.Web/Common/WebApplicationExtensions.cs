@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
-using SC4013.Web.Common;
 
-namespace Sample.API.Common;
+namespace SC4013.Web.Common;
 
 public static class WebApplicationExtensions
 {
@@ -11,7 +10,7 @@ public static class WebApplicationExtensions
 
         return app
             .MapGroup($"/api/{groupName}")
-            //.WithGroupName(groupName)
+            .WithGroupName(groupName)
             .WithTags(groupName)
             .WithOpenApi();
     }
