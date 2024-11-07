@@ -9,6 +9,11 @@ on:
       - main
   workflow_dispatch:
     
+env:
+  AZURE_WEBAPP_PACKAGE_PATH: .\publish
+  
+  
+  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -41,18 +46,18 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Release -o ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp
 
       # Copy Angular build to the .NET publish output without overwriting existing files
       - name: Copy angular files to publish folder
         run: xcopy "src\SC4013.Web\ClientApp\dist\sc4013.web\*" "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}" /s /e /d /i
 
-
+      # Publish Artifact
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
 
   deploy:
     runs-on: ubuntu-latest
@@ -73,5 +78,5 @@ jobs:
         with:
           app-name: 'sc4013'
           slot-name: 'Production'
-          package: .
+          package: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_47213CF148FC41D4A9D1E62EB671D416 }}
