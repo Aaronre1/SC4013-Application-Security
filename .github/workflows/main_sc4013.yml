@@ -8,6 +8,13 @@ on:
     branches:
       - main
 
+  workflow_call:
+    inputs:
+      build-artifacts:
+        type: boolean
+        required: true
+        default: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
