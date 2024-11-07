@@ -50,7 +50,7 @@ jobs:
 
       # Copy Angular build to the .NET publish output without overwriting existing files
       - name: Copy angular files to publish folder
-        run: xcopy "src\SC4013.Web\ClientApp\dist\sc4013.web\*" "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}" /s /e /d /i
+        run: cp "src\SC4013.Web\ClientApp\dist\sc4013.web\*" "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}" /s /e /d /i
 
       # Publish Artifact
       - name: Upload artifact for deployment job
