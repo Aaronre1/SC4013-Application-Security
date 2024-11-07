@@ -79,5 +79,5 @@ jobs:
         with:
           app-name: 'sc4013'
           slot-name: 'Production'
-          package: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
+          package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_47213CF148FC41D4A9D1E62EB671D416 }}
