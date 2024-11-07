@@ -47,7 +47,6 @@ jobs:
         run: dotnet build --no-restore --configuration Release
 
       - name: Publish website
-        if: ${{ inputs.build-artifacts == true }}
         run: |
           dotnet publish --configuration Release --runtime win-x86 --self-contained --output ./publish
           cd publish
@@ -55,7 +54,6 @@ jobs:
         working-directory: ./src/SC4013.Web/
 
       - name: Upload website artifact (website)
-        if: ${{ inputs.build-artifacts == true }}
         uses: actions/upload-artifact@v4
         with:
           name: website
