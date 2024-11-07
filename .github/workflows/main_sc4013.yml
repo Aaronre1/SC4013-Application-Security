@@ -8,13 +8,31 @@ on:
     branches:
       - main
   workflow_dispatch:
-
+    
+env:
+  
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli@18
+        
+      - name: Install Angular dependencies
+        working-directory: src/SC4013.Web/ClientApp
+        run: npm install
+        
+      - name: Build Angular app
+        working-directory: src/SC4013.Web/ClientApp
+        run: npm run build -- --prod
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
@@ -26,6 +44,11 @@ jobs:
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+
+      # Copy Angular build to the .NET publish output without overwriting existing files
+      - name: Copy angular files to publish folder
+        run: xcopy "src\SC4013.Web\ClientApp\dist\sc4013.web\*" "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}" /s /e /d /i
+
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
