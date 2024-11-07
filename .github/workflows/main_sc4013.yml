@@ -49,8 +49,8 @@ jobs:
         run: dotnet publish -c Release -o ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
 
       # Copy Angular build to the .NET publish output without overwriting existing files
-      - name: Copy angular files to publish folder
-        run: cp -r src/SC4013.Web/ClientApp/dist/* "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+#      - name: Copy angular files to publish folder
+#        run: cp -r src/SC4013.Web/ClientApp/dist/* "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
 
       # Publish Artifact
       - name: Upload artifact for deployment job
