@@ -2,13 +2,13 @@
 @using SC4013.Infrastructure.Identity
 @inject  SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
-
+@using System.Net
 @{
     string? returnUrl = null;
     var query = ViewContext.HttpContext.Request.Query;
     if (query.ContainsKey("returnUrl"))
     {
-        returnUrl = query["returnUrl"];
+        returnUrl = WebUtility.HtmlEncode(query["returnUrl"]);
     }
 }
 
