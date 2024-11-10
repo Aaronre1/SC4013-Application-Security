@@ -292,12 +292,24 @@ export class TodoComponent implements OnInit {
           result => {
             item.id = result;
           },
-          error => console.error(error)
+          error => {
+            if (error.status === 403) {
+              alert('You are not authorized to add items to this list.');
+            }else{
+              alert('An error occurred while adding the item.');
+            }
+          }
         );
     } else {
       this.itemsClient.updateTodoItem(item as UpdateTodoItemCommand).subscribe(
         () => console.log('Update succeeded.'),
-        error => console.error(error)
+        error => {
+          if (error.status === 403) {
+            alert('You are not authorized to update this item.');
+          } else {
+            alert('An error occurred while updating the item.');
+          }
+        }
       );
     }
 
