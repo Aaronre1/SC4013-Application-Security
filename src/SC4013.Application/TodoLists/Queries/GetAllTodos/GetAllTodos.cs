@@ -35,7 +35,8 @@ public class GetAllTodosQueryHandler : IRequestHandler<GetAllTodosQuery, IReadOn
                     Done = i.Done,
                     Priority = (int)i.Priority,
                     Description = i.Description,
-                    DueDate = i.DueDate
+                    DueDate = i.DueDate,
+                    AssigneeEmail = i.AssigneeEmail
                 }).ToList()
             })
             .ToListAsync(cancellationToken);

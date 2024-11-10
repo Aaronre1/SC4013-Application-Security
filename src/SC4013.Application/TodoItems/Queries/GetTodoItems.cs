@@ -30,7 +30,7 @@ public class GetTodoItemsQueryHandler : IRequestHandler<GetTodoItemsQuery, List<
                 ListId = x.ListId,
                 Title = x.Title,
                 Description = x.Description,
-                PriorityLevel = x.Priority,
+                Priority = x.Priority,
                 DueDate = x.DueDate,
                 Done = x.Done,
                 AssigneeEmail = x.AssigneeEmail,

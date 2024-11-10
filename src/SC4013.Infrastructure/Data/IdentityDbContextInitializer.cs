@@ -85,5 +85,16 @@ public class IdentityDbContextInitializer
             }
         }
         
+        var user = new ApplicationUser
+        {
+            UserName = "user@localhost",
+            Email = "user@localhost"
+        };
+        
+        if (_userManager.Users.All(u => u.UserName != user.UserName))
+        {
+            await _userManager.CreateAsync(user, defaultPassword);
+        }
+        
     }
 }

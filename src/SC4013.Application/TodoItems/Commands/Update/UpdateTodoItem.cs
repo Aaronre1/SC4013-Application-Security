@@ -8,9 +8,10 @@ namespace SC4013.Application.TodoItems.Commands.Update;
 public class UpdateTodoItemCommand : IRequest<Result>
 {
     public int Id { get; set; }
+    public int? ListId { get; set; }
     public string? Title { get; set; }
     public bool? Done { get; set; }
-    public PriorityLevel? PriorityLevel { get; set; }
+    public PriorityLevel? Priority { get; set; }
     public string? Description { get; set; }
 }
 
@@ -31,10 +32,11 @@ public class UpdateTodoItemCommandHandler : IRequestHandler<UpdateTodoItemComman
         {
             return Result.Failure(new List<string> {"Todo item not found"});
         }
-
+        
+        entity.ListId = request.ListId ?? entity.ListId;
         entity.Title = request.Title ?? entity.Title;
         entity.Done = request.Done ?? entity.Done;
-        entity.Priority = request.PriorityLevel ?? entity.Priority;
+        entity.Priority = request.Priority ?? entity.Priority;
         entity.Description = request.Description ?? entity.Description;
 
         await _context.SaveChangesAsync(cancellationToken);
