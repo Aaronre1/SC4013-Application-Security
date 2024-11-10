@@ -56,34 +56,6 @@ public static class DependencyInjection
         services.AddScoped<ApplicationDbContextInitializer>();
         services.AddScoped<IdentityDbContextInitializer>();
 
-        // services.AddAuthentication()
-        //     .AddBearerToken(IdentityConstants.BearerScheme);
-
-        // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        //     .AddJwtBearer(x =>
-        //     {
-        //         x.TokenValidationParameters = new TokenValidationParameters
-        //         {
-        //             ValidateIssuer = true,
-        //             ValidateAudience = true,
-        //             ValidateLifetime = true,
-        //             ValidateIssuerSigningKey = true,
-        //             ValidIssuer = config["JwtSettings:Issuer"],
-        //             ValidAudience = config["JwtSettings:Audience"],
-        //             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!))
-        //         };
-        //     });
-
-        
-
-        //services.AddAuthorizationBuilder();
-
-        // services.AddIdentityCore<ApplicationUser>()
-        //     .AddRoles<IdentityRole>()
-        //     .AddEntityFrameworkStores<IdentityContext>()
-        //     .AddDefaultTokenProviders()
-        //     .AddApiEndpoints();
-
         services.AddDefaultIdentity<ApplicationUser>()
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<IdentityContext>();
@@ -97,33 +69,17 @@ public static class DependencyInjection
             options.Password.RequireUppercase = true;
             options.Password.RequireNonAlphanumeric = true;
             options.Password.RequiredUniqueChars = 1;
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(1);
+            // Microsoft Security Compliance Toolkit (SCT) baseline recommended value is 10.
+            options.Lockout.MaxFailedAccessAttempts = 10;
             options.Lockout.AllowedForNewUsers = true;
             options.User.RequireUniqueEmail = true;
         });
-        
-        // services.AddAuthentication(x =>
-        // {
-        //     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //     x.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
-        //     x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        //     x.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
-        //     x.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
-        // }).AddJwtBearer(x =>
-        // {
-        //     x.TokenValidationParameters = new TokenValidationParameters
-        //     {
-        //         ValidateIssuer = true,
-        //         ValidateAudience = true,
-        //         ValidateLifetime = true,
-        //         ValidateIssuerSigningKey = true,
-        //         ValidIssuer = config["JwtSettings:Issuer"],
-        //         ValidAudience = config["JwtSettings:Audience"],
-        //         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!))
-        //     };
-        // });
+
+        services.ConfigureApplicationCookie(x =>
+        {
+            x.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        });
 
         services.AddSingleton(TimeProvider.System);
         services.AddTransient<IIdentityService, IdentityService>();
