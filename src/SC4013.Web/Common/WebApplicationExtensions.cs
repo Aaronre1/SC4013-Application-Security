@@ -12,7 +12,8 @@ public static class WebApplicationExtensions
             .MapGroup($"/api/{groupName}")
             .WithGroupName(groupName)
             .WithTags(groupName)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireRateLimiting("fixed");
     }
 
     public static WebApplication MapEndpoints(this WebApplication app)

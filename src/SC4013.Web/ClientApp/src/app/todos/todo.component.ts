@@ -1,6 +1,6 @@
 import {Component, TemplateRef, OnInit} from '@angular/core';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
-import { DatePipe } from '@angular/common'
+import {DatePipe} from '@angular/common'
 
 import {
   TodoItemsClient, TodoItemDto,
@@ -211,6 +211,8 @@ export class TodoComponent implements OnInit {
       error => {
         if (error.status === 403) {
           alert('You are not authorized to update this item.');
+        } else if (error.status === 503) {
+          alert('You’ve hit the limit of requests allowed in a short time. Please wait a few moments before trying again.')
         } else {
           alert('An error occurred while updating the item.');
         }
@@ -227,7 +229,7 @@ export class TodoComponent implements OnInit {
     this.itemAssigneeModalRef = this.modalService.show(template);
   }
 
-  updateAssignee():void {
+  updateAssignee(): void {
     console.log(this.itemDetailsEditor);
     const item = new AssignTodoItemCommand();
     item.id = this.itemDetailsEditor.id;
@@ -252,6 +254,8 @@ export class TodoComponent implements OnInit {
       error => {
         if (error.status === 403) {
           alert('You are not authorized to update this item.');
+        } else if (error.status === 503) {
+          alert('You’ve hit the limit of requests allowed in a short time. Please wait a few moments before trying again.')
         } else {
           alert('An error occurred while updating the item.');
         }
@@ -295,7 +299,9 @@ export class TodoComponent implements OnInit {
           error => {
             if (error.status === 403) {
               alert('You are not authorized to add items to this list.');
-            }else{
+            } else if (error.status === 503) {
+              alert('You’ve hit the limit of requests allowed in a short time. Please wait a few moments before trying again.')
+            } else {
               alert('An error occurred while adding the item.');
             }
           }
@@ -306,6 +312,9 @@ export class TodoComponent implements OnInit {
         error => {
           if (error.status === 403) {
             alert('You are not authorized to update this item.');
+          } else if (error.status === 503) {
+            console.error(error);
+            alert('You’ve hit the limit of requests allowed in a short time. Please wait a few moments before trying again.')
           } else {
             alert('An error occurred while updating the item.');
           }
@@ -337,6 +346,8 @@ export class TodoComponent implements OnInit {
         error => {
           if (error.status === 403) {
             alert('You are not authorized to delete this item.');
+          } else if (error.status === 503) {
+            alert('You’ve hit the limit of requests allowed in a short time. Please wait a few moments before trying again.')
           } else {
             alert('An error occurred while deleting the item.');
           }
